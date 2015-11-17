@@ -347,7 +347,9 @@ setup(
         ('share/horton/grids', glob('data/grids/*.txt')),
         ('share/horton/refatoms', glob('data/refatoms/*.h5')),
     ] + [
-        ('share/horton/examples/%s' % os.path.basename(dn[:-1]), glob('%s/*.py' % dn) + glob('%s/README' % dn))
+        ('share/horton/examples/%s' % os.path.basename(dn[:-1]),
+            glob('%s/*.py' % dn) + glob('%s/README' % dn) +
+            glob('%s/*.xyz' % dn) + glob('%s/*.pc' % dn))
         for dn in glob('data/examples/*/')
     ],
     package_data={

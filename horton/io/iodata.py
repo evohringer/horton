@@ -294,6 +294,9 @@ class IOData(object):
             elif filename.endswith('.xyz'):
                 from horton.io.xyz import load_xyz
                 result.update(load_xyz(filename))
+            elif filename.endswith('.pc'):
+                from horton.io.ext_charges import load_ext_charges
+                result.update(load_ext_charges(filename))
             elif filename.endswith('.fchk'):
                 from horton.io.gaussian import load_fchk
                 result.update(load_fchk(filename, lf))

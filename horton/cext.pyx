@@ -37,7 +37,7 @@ __all__ = [
     # moments.cpp
     'fill_cartesian_polynomials', 'fill_pure_polynomials', 'fill_radial_polynomials',
     # nucpot.cpp
-    'compute_grid_nucpot', 'compute_nucnuc',
+    'compute_grid_nucpot', 'compute_nucnuc', 'compute_nucnuc_qmmm',
 ]
 
 
@@ -546,4 +546,49 @@ def compute_nucnuc(np.ndarray[double, ndim=2] coordinates not None,
         for j in xrange(i):
             distance = np.linalg.norm(coordinates[i]-coordinates[j])
             result += charges[i]*charges[j]/distance
+    return result
+
+
+def compute_nucnuc_qmmm(np.ndarray[double, ndim=2] coordinates not None,
+                   np.ndarray[double, ndim=1] charges not None,
+                   np.ndarray[double, ndim=2] ext_charge_coordinates not None,
+                   np.ndarray[double, ndim=1] ext_charges not None,):
+    '''Compute interaction energy of the nuclei and the interaction of the nuclei
+       with the external charges
+
+       **Arguments:**
+
+       coordinates
+            A (N, 3) float numpy array with Cartesian coordinates of the
+            atoms.
+
+       charges
+            A (N,) numpy vector with the atomic charges.
+
+       ext_charge_coordinates
+            A (N, 3) float numpy array with Cartesian coordinates of the
+            external charges.
+
+       ext_charges
+            A (N,) numpy vector with the external charges.
+
+    '''
+    # type checking
+    assert coordinates.flags['C_CONTIGUOUS']
+    assert charges.flags['C_CONTIGUOUS']
+    assert ext_charge_coordinates.flags['C_CONTIGUOUS']
+    assert ext_charges.flags['C_CONTIGUOUS']
+    ncharge, coordinates, charges = typecheck_geo(coordinates, None, charges, need_numbers=False)
+    next_charges, ext_charge_coordinates, ext_charges = typecheck_geo(ext_charge_coordinates, None, ext_charges, need_numbers=False)
+    # actual computation
+    result = 0.0
+    for i in xrange(ncharge):
+        # the interaction of atom i with all other nuclei is calculated first
+        for j in xrange(i):
+            distance = np.linalg.norm(coordinates[i]-coordinates[j])
+            result += charges[i]*charges[j]/distance
+        # Now compute the interaction of nucleus i with all the external charges
+        for j in xrange(next_charges):
+            distance = np.linalg.norm(coordinates[i]-ext_charge_coordinates[j])
+            result += charges[i]*ext_charges[j]/distance
     return result

@@ -401,3 +401,7 @@ def test_example_hf_compare():
     required = [context.get_fn('examples/hf_compare/compare.py')]
     expected = []
     check_script_in_tmp('./compare.py %s' % context.get_fn('test/helium_hf_sto3g.fchk'), required, expected)
+
+
+def test_example_006_qmmm_water():
+    check_script('./run.py', context.get_fn('examples/006_qmmm_water'))
