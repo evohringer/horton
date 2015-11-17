@@ -5,10 +5,10 @@ import numpy as np
 
 # Load the coordinates of one water molecule from file.
 # Use the XYZ file from HORTON's test data directory.
-mol = Molecule.from_file('water.xyz')
+mol = IOData.from_file('water.xyz')
 
 # read in the charges from the second water molecule from file pointcharges.pc
-ext_charges = Molecule.from_file('pointcharges.pc')
+ext_charges = IOData.from_file('pointcharges.pc')
 
 # Create a Gaussian basis set
 obasis = get_gobasis(mol.coordinates, mol.numbers, 'cc-pVDZ')
@@ -53,7 +53,7 @@ dm_alpha = exp_alpha.to_dm()
 scf_solver = ODASCFSolver(1e-6)
 scf_solver(ham, lf, olp, occ_model, dm_alpha)
 
-print 'energy',ham.cache['energy']
+print 'energy', ham.cache['energy']
 # Assign results to the molecule object and write it to a file, e.g. for
 # later analysis
 mol.title = 'RHF computation on water'
@@ -63,4 +63,4 @@ mol.energy = ham.cache['energy']
 error = mol.energy - -76.034053013178
 
 
-print 'The error is %+1.4e' % (error)
+print 'The error is %+1.4e' % error

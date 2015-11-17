@@ -29,8 +29,9 @@ from horton.test.common import tmpdir
 
 def test_load_ext_charges():
     fn = context.get_fn('test/water_ext_charges.pc')
-    mol = Molecule.from_file(fn)
+    mol = IOData.from_file(fn)
     check_water_ext_charges(mol)
+
 
 def check_water_ext_charges(mol):
     assert mol.charges[0] == -0.82
